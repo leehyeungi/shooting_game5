@@ -194,8 +194,6 @@ class Plus(Animation):
         self.image.blit(self.sprite_sheet, (0, 0), rect)
         self.image.set_colorkey(Color(255, 255, 255))
 
-        bullet_plus = 
-
 #이미지 그룹
 background = Background()
 background_group = pygame.sprite.Group()
@@ -284,7 +282,6 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 #중심에 들어가게 만들기
-                space_bar += 1
                 bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
                 bullets += 1
                 if bullets == 1000:
@@ -305,11 +302,6 @@ while running:
 
     if item_li == 10:
         item_li = 0
-
-    #bullet의 개수가 하나 증가
-    if blt_count == 1:
-        player.bullet_plus_in_player += 1
-        blt_count = 0
 
     # 게임 상태 업데이트
     player_group.update()
@@ -347,22 +339,33 @@ while running:
         hit = pygame.sprite.groupcollide(item_group, player_group, True, False)
         if hit:
             shields += 1
-            vle = random.randint(1, 2)
+            vle = random.randint(0, 1)
             cls_list[vle].rect.x = (player.rect.x + player.rect.width/2) - cls_list[vle].rect.width/2
             cls_list[vle].rect.y = player.rect.y
             count += 1
-            shield_score += 1
-    
+            if cls_list == shield:
+                shield_score += 1
+            elif cls_list == plus:
+                blt_count += 1
+
     if shield_score == 1:
         shield_group.add(shield)
         shield_score = 0
+
+    #bullet의 개수가 하나 증가
+    if blt_count == 1:
+        player.rect.x + player.rect.width / 2
+    else:
+        blt_count = 0
 
     if count == 1:
         cls_list[vle].rect.x = (player.rect.x + player.rect.width/2) - cls_list[vle].rect.width/2
         cls_list[vle].rect.y = player.rect.y
             
     if shield.alive():
-        pygame.sprite.groupcollide(shield_group, enemy_group, True, True)
+        hitt = pygame.sprite.groupcollide(shield_group, enemy_group, True, True)
+        if hitt:
+            count = 0
             
     if player.alive():
         hitse = pygame.sprite.groupcollide(player_group, enemy_group, True, True)
@@ -396,3 +399,4 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
