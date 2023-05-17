@@ -116,6 +116,7 @@ class Bullet(Animation):
     def shoot(self, x, y):
         self.rect.y = y
         self.rect.x = x
+        
 
 #보스의 클래스
 class Boss(Animation):
@@ -236,6 +237,7 @@ space_bar = 0
 shield_score = 0
 boss_score = 0
 blt_count = 0
+bullet_count = 0
 
 #클래스 리스트
 cls_list = [shield, plus]
@@ -281,11 +283,21 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                #중심에 들어가게 만들기
-                bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
-                bullets += 1
-                if bullets == 1000:
-                    running = False
+                if blt_count == 1:
+                    #blu_val = (player.rect.x + player.rect.width/2) + 5 #중심좌표에서 x좌표로 +5
+                    bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2 - 50, player.rect.y)
+                    bullets += 1
+                    bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
+                    bullets += 1
+                    if bullets == 1000:
+                        running = False
+                if blt_count == 0:
+                    #중심에 들어가게 만들기
+                    bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
+                    bullets += 1
+                    if bullets == 1000:
+                        running = False
+
 
     #스코어 점수가 400이 되면 보스 출현
     if player.score % 400 == 0:
@@ -343,22 +355,16 @@ while running:
             cls_list[vle].rect.x = (player.rect.x + player.rect.width/2) - cls_list[vle].rect.width/2
             cls_list[vle].rect.y = player.rect.y
             count += 1
-            if cls_list == shield:
+            if vle == 0:
                 shield_score += 1
-            elif cls_list == plus:
+            if vle == 1:
                 blt_count += 1
 
     if shield_score == 1:
         shield_group.add(shield)
         shield_score = 0
 
-    #bullet의 개수가 하나 증가
-    if blt_count == 1:
-        player.rect.x + player.rect.width / 2
-    else:
-        blt_count = 0
-
-    if count == 1:
+    if count != 0:
         cls_list[vle].rect.x = (player.rect.x + player.rect.width/2) - cls_list[vle].rect.width/2
         cls_list[vle].rect.y = player.rect.y
             
