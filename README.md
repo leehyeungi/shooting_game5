@@ -238,11 +238,14 @@ shield_score = 0
 boss_score = 0
 blt_count = 0
 bullet_count = 0
+blt_rect = 0
+
+count_li = [0, 1]
 
 #클래스 리스트
 cls_list = [shield, plus]
 
-for i in range(1000):
+for i in range(10000):
     b = Bullet()
     b.rect.x = -1000
     b.rect.y = -1000
@@ -282,22 +285,45 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                blt_count+=1
+                blt_rect+=1
             if event.key == pygame.K_SPACE:
-                if blt_count == 1:
-                    #blu_val = (player.rect.x + player.rect.width/2) + 5 #중심좌표에서 x좌표로 +5
-                    bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2 - 50, player.rect.y)
-                    bullets += 1
-                    bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
-                    bullets += 1
-                    if bullets == 1000:
-                        running = False
-                if blt_count == 0:
-                    #중심에 들어가게 만들기
-                    bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
-                    bullets += 1
-                    if bullets == 1000:
-                        running = False
+                #player.rect.x + 67 / 2을 기준점으로 시작 홀수면 -10 짝수면 +10
+                bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2, player.rect.y)
+                bullets += 1
+                if bullets == 10000:
+                    running = False
+                if blt_count % 2 == 1: #홀수 -10
+                    odd = blt_count//2+1
+                    even = blt_count//2
 
+                    blt_rect = 10
+                    for k in range(odd):
+                        bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2 - blt_rect, player.rect.y)
+                        bullets += blt_count
+                        blt_rect+=10
+
+                    blt_rect = 10
+                    for h in range(even):
+                        bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2 + blt_rect, player.rect.y)
+                        bullets += blt_count
+                        blt_rect += 10
+                if blt_count % 2 == 0 and blt_count > 1: #짝수 +10
+                    odd = blt_count//2   
+                    even = blt_count//2
+                    
+                    blt_rect = 10
+                    for k in range(odd):
+                        bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2 - blt_rect, player.rect.y)
+                        bullets += blt_count
+                        blt_rect+=10
+
+                    blt_rect = 10
+                    for h in range(even):
+                        bullet_group.sprites()[bullets].shoot(player.rect.x + 67 / 2 + blt_rect, player.rect.y)
+                        bullets += blt_count
+                        blt_rect += 10
 
     #스코어 점수가 400이 되면 보스 출현
     if player.score % 400 == 0:
@@ -359,6 +385,8 @@ while running:
                 shield_score += 1
             if vle == 1:
                 blt_count += 1
+                blt_rect += 10
+                
 
     if shield_score == 1:
         shield_group.add(shield)
@@ -405,4 +433,5 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
 
